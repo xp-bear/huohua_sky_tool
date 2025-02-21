@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>天窗实时检测</title>
+    <!-- 引入layui -->
+    <!-- <link rel="stylesheet" href="https://xp-cdn-oss.oss-cn-wuhan-lr.aliyuncs.com/cookies/layui.css" />
+    <script src="https://xp-cdn-oss.oss-cn-wuhan-lr.aliyuncs.com/cookies/layui.js"></script> -->
+
+    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+    <!--引入ECharts脚本-->
+    <script src="./js/echarts.min.js"></script>
+    <!-- 引入 Axios -->
+    <script src="./js/axios.min.js"></script>
+    <!-- 引入全局样式表 -->
+    <link rel="stylesheet" href="./style/index.css" />
+  </head>
+
+  <body>
+    <!-- 顶部导航栏 -->
+    <div class="nav">与当前页面无交互，无法播放音频，请先点击页面。</div>
+    <!-- 小休播放器 -->
+    <!--  -->
+    <audio class="audio_xiaoxiu" src="https://xp-cdn-oss.oss-cn-wuhan-lr.aliyuncs.com/cookies/xiuxi.wav?1738823243315"></audio>
+
+    <!-- 遮罩弹出层 -->
+    <div class="mask_layer">
+      <div class="layer_titles">
+        <img class="layer_img" src="https://xp-cdn-oss.oss-cn-wuhan-lr.aliyuncs.com/cookies/56772e993d995674fc22c97acf309682-1738763256254.gif" alt="" />
+        <div class="layer_title_1">来单子了,快去处理!</div>
+        <audio class="audio_music" src="https://xp-cdn-oss.oss-cn-wuhan-lr.aliyuncs.com/cookies/order-1738765700628.mp3" loop="loop" autoplay="autoplay"></audio>
+      </div>
+    </div>
+
+    <div class="master-box">
+      <!-- 当前工单池子的工单 -->
+      <div class="ticket">
+        <table>
+          <caption>
+            <div class="text-style-5">当前工单池子<span class="ticket_num"> (0)单</span></div>
+            <!-- 待上课程数量和正在上课数量 -->
+            <div class="classroom">
+              *** <span class="dai_option">待处理：0</span> ***
+              <!-- <span class="chu_option">处理中：0</span> -->
+              <!-- <span class="yu_option">预约中：0</span> -->
+              <div class="music_div">小休声音：<span class="xiaoxiu_music">🔊</span></div>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <span class="wait_num">待上课程(0)</span>
+              <span class="doing_num">正在上课(0)</span>
+            </div>
+            <div class="table_state">
+              <button class="jiance">监测:关闭</button>
+              <button class="xiaoxiu" title="↑ 开启小休">一键小休</button>
+              <button class="gongzuo" title="↓ 开始工作">一键工作</button>
+              <div class="tiqu_state">
+                <span>提取</span>
+                <span class="state_text"></span>
+              </div>
+              <!-- 自动开小休 -->
+              <div class="xiaoxiu_state">
+                <span class="appointment_xiaoxiu">预约开小休：</span>
+                <input type="time" class="auto_xiaoxiu" step="1" id="timePicker" />
+                <span class="daojishi">倒计时: 0s</span>
+              </div>
+            </div>
+          </caption>
+          <thead>
+            <tr>
+              <!-- 124545 预约单 -->
+              <th>级别</th>
+              <th>工单编号</th>
+              <th>孩子名称</th>
+              <th>工单类型</th>
+              <th>处理时间</th>
+              <th>问题描述</th>
+            </tr>
+          </thead>
+          <tbody class="really-tbody"></tbody>
+        </table>
+      </div>
+      <!-- 工单量排名展示 -->
+      <div class="container">
+        <!-- 按钮区域 -->
+        <div class="info">
+          <div class="left-info">
+            <div class="btn-animate-state toggleSky">
+              <span>天窗状态切换</span>
+            </div>
+            <div class="btn-animate mask">切换日期</div>
+
+            <!-- 工单总量 -->
+            <div class="btn-animate-number todayTicket">总量:</div>
+            <div class="btn-animate-day dayPeople">今日:</div>
+          </div>
+
+          <div class="right-info">
+            <div class="input-container">
+              <input type="text" id="input" required="" />
+              <label for="input" class="label">本周班表</label>
+              <div class="underline"></div>
+            </div>
+
+            <div class="autochange">
+              <div>自动打卡&nbsp;</div>
+              <div class="checkbox-apple">
+                <input class="yep" id="check-apple" type="checkbox" />
+                <label for="check-apple"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!---数据展示图表区域-->
+        <div id="main" style="width: 800px; height: 1200px"></div>
+
+        <!-- 获取cookie的参数区域 -->
+        <div id="apply">
+          <div class="ipt">
+            <span>cookie值: </span>
+            <input type="text" placeholder="输入cookie..." class="cookie" />
+          </div>
+          <div class="ipt">
+            <span>token值: </span>
+            <input type="text" placeholder="输入token..." class="token" />
+          </div>
+          <div class="ipt">
+            <span>工单时间: </span>
+            <input type="text" placeholder="输入时间..." class="time" />
+          </div>
+          <div class="submit">提交</div>
+        </div>
+      </div>
+
+      <!-- 加载中 -->
+      <div class="loader-19-1">
+        <span>加载中...</span>
+      </div>
+    </div>
+    <!-- <script type="text/javascript" src="./js/layui_detail.js"></script> -->
+    <script type="text/javascript" src="./js/index.js"></script>
+    <script type="text/javascript" src="./js/sky.js"></script>
+    <script type="text/javascript" src="./js/auto.js"></script>
+    <script type="text/javascript" src="./js/really.js"></script>
+    <script type="text/javascript" src="./js/tool.js"></script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+使用条件:
+1.必须安装node环境  https://nodejs.cn/download/
+2.打开当前going文件夹内的终端窗口，先运行npm i，在运行npm run dev
+3.打开浏览器输入 http://127.0.0.1:3000 输入自己的token和cookie信息即可
+4.有疑问联系 coderxp@qq.com
+
+//小技巧提示,杀死端口操作
+netstat -ano | findstr :3000  找进程PID
+tasklist /FI "PID eq <PID>  查看进程名称
+taskkill /F /PID <PID>  杀死端口进程
+

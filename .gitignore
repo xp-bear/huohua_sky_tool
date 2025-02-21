@@ -1,0 +1,37 @@
+# 忽略操作系统生成的文件
+.DS_Store
+Thumbs.db
+
+# 忽略编译生成的文件
+*.class
+*.o
+*.so
+*.exe
+*.dll
+
+# 忽略日志文件
+*.log
+
+# 忽略临时文件
+*.tmp
+*.swp
+
+# 忽略 IDE 生成的文件
+.vscode/
+.idea/
+*.iml
+
+# 忽略 node_modules 目录
+node_modules/
+
+# 忽略 Python 虚拟环境
+venv/
+__pycache__/
+
+# 忽略特定文件
+config.json
+.env
+
+# 忽略打包生成的文件
+dist/
+build/
