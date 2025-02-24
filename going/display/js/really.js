@@ -299,9 +299,12 @@ const timerId = workerTimer.setInterval(() => {
 
   //监测按钮状态  开启或者关闭
   detial_jiance();
+
+  // 判断当前工单列表里面如果没有预约的实时高工单和实时高工单 就切换到工作状态
+  ticketsChecked();
 }, 1000);
 
-// 500ms 请求一次表格数据
+// 300ms 请求一次表格数据
 const timerId2 = workerTimer.setInterval(() => {
   // 渲染表格数据
   axios.get("http://localhost:3000/order").then((res) => {
@@ -388,6 +391,8 @@ const timerId2 = workerTimer.setInterval(() => {
 // ************************* 每秒请求定时器 *************************
 // 点击小休，切换工作状态
 xiaoxiu.addEventListener("click", () => {
+  // 先关闭监测
+  localStorage.setItem("jiance_state", "false");
   fetchTicketSwitch(21).then((res) => {
     if (res.code == 200) {
       console.log("小休");
@@ -397,6 +402,9 @@ xiaoxiu.addEventListener("click", () => {
 
 // 点击工作，切换工作状态
 gongzuo.addEventListener("click", () => {
+  // 工作状态开启监测
+  // localStorage.setItem("jiance_state", "true");
+
   fetchTicketSwitch(10).then((res) => {
     if (res.code == 200) {
       console.log("工作");
@@ -494,6 +502,8 @@ document.addEventListener("keydown", function (e) {
   if (e.key == "ArrowLeft") {
     // 阻止默认事件。
     e.preventDefault();
+    // 先关闭监测
+    localStorage.setItem("jiance_state", "false");
     xiaoxiu.click(); // 小休触发点击事件
     // gongzuo.click(); // 工作触发点击事件
   }
@@ -507,13 +517,9 @@ function detial_jiance() {
   if (state == "true") {
     jiance.innerHTML = "监测:开启";
     jiance.style.backgroundColor = "red";
-    // 保存到本地
-    // localStorage.setItem("jiance_state", "true");
   } else if (state == "false") {
     jiance.innerHTML = "监测:关闭";
     jiance.style.backgroundColor = "#ccc";
-    // 保存到本地
-    // localStorage.setItem("jiance_state", "false");
   }
 }
 
@@ -543,3 +549,45 @@ xiaoxiu_music.addEventListener("click", () => {
     xiaoxiu_music.innerHTML = "🔊";
   }
 });
+
+// 判断当前工单列表里面如果没有预约的实时高工单和实时高工单 就切换到工作状态
+function ticketsChecked() {
+  // 先判断有没有开启监测
+  let jiance_state = localStorage.getItem("jiance_state");
+  if (jiance_state == "false") {
+    return;
+  }
+  axios.get("http://localhost:3000/order").then((res) => {
+    let data = res.data.data;
+    let flag = false; // 默认没有高工单
+    data.forEach((item) => {
+      if (item.appointedTime == null) {
+        if (item.priority == 1) {
+          flag = true;
+        }
+      } else {
+        let now = new Date();
+        let appointedTime = new Date(item.appointedTime);
+        if (now >= appointedTime) {
+          if (item.priority == 1) {
+            flag = true;
+          }
+        }
+      }
+    });
+    if (!flag) {
+      // 判断当前的工作状态是否是工作状态
+      console.log("没有高工单");
+
+      getWorkState().then((res) => {
+        if (!res.data.description.includes("工作")) {
+          fetchTicketSwitch(10).then((res) => {
+            if (res.code == 200) {
+              console.log("自动切换到--工作");
+            }
+          });
+        }
+      });
+    }
+  });
+}
