@@ -560,10 +560,11 @@ function ticketsChecked() {
   axios.get("http://localhost:3000/order").then((res) => {
     let data = res.data.data;
     let flag = false; // 默认没有高工单
-    data.forEach((item) => {
+    data.some((item) => {
       if (item.appointedTime == null) {
         if (item.priority == 1) {
           flag = true;
+          return;
         }
       } else {
         let now = new Date();
@@ -571,7 +572,15 @@ function ticketsChecked() {
         if (now >= appointedTime) {
           if (item.priority == 1) {
             flag = true;
+            return;
           }
+        }
+        // 预约单 10分钟内
+        let diff = appointedTime - now;
+        console.log("预约单时间差", diff);
+        if (diff <= 602000 && diff > 0) {
+          flag = true;
+          return;
         }
       }
     });
