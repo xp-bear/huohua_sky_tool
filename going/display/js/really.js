@@ -577,8 +577,9 @@ function ticketsChecked() {
         }
         // 预约单 10分钟内
         let diff = appointedTime - now;
-        console.log("预约单时间差", diff);
+        // console.log("预约单时间差", diff);
         if (diff <= 602000 && diff > 0) {
+          console.log("预约单时间差小于10分钟，不要切换工作");
           flag = true;
           return;
         }
@@ -586,7 +587,7 @@ function ticketsChecked() {
     });
     if (!flag) {
       // 判断当前的工作状态是否是工作状态
-      console.log("没有高工单");
+      console.log("没有高单-工作");
 
       getWorkState().then((res) => {
         if (!res.data.description.includes("工作")) {
