@@ -242,7 +242,9 @@ const timerId = workerTimer.setInterval(() => {
           // 切换监测状态 关闭
           localStorage.setItem("jiance_state", "false");
         } else {
+          // *****************************************************************************************************************************************************************************
           // 切换监测状态 这里一定要关闭，防止在工作状态自动开启了监测。
+          // *****************************************************************************************************************************************************************************
           localStorage.setItem("jiance_state", "true");
         }
       });
@@ -321,9 +323,9 @@ const timerId2 = workerTimer.setInterval(() => {
         if (item.appointedTime == null) {
           // 判断是否高工单。
           if (item.priority == 1) {
-            console.log("表格数据:", data);
+            // console.log("表格数据:", data);
 
-            console.log("实时单 高 工单");
+            console.log("实时单 高 工单", item);
             // 判断当前的工作状态是否是工作状态
             getWorkState().then((res) => {
               if (!res.data.description.includes("小休")) {
@@ -342,9 +344,9 @@ const timerId2 = workerTimer.setInterval(() => {
           let appointedTime = new Date(item.appointedTime);
           if (now >= appointedTime) {
             if (item.priority == 1) {
-              console.log("表格数据:", data);
+              // console.log("表格数据:", data);
 
-              console.log("预约的实时 高 工单");
+              console.log("预约的实时 高 工单", item);
               // 判断当前的工作状态是否是工作状态
               getWorkState().then((res) => {
                 if (!res.data.description.includes("小休")) {
