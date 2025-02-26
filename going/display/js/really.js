@@ -227,14 +227,13 @@ async function getTicketData(state) {
     console.error(error); // 处理错误
   }
 }
-// ************************* 每秒请求定时器 *************************
-// 1s请求一次数据 使用worker定时器
+// ************************* 每1s秒请求定时器 *************************
 const timerId = workerTimer.setInterval(() => {
-  // 1s 获取工作状态
+  // 获取工作状态
   getWorkState().then((res) => {
+    // 只有在【工作状态】下才会判断是否有处理中工单
     if (res.data.description.includes("工作")) {
-      // console.log("当前是: 工作状态");
-      // 处理中工单
+      // 判断是否有处理中工单
       getTicketData(2).then((result) => {
         let num = result.data.tickets.length;
         // console.log("处理中工单", num);
